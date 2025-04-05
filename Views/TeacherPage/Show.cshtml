@@ -1,0 +1,33 @@
+﻿@model HTTP_5125_Cumulative2.Models.Teacher
+
+@{
+    ViewData["Title"] = "Teacher Details";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<div class="teacher-details">
+    <dl class="row">
+        <dt class="col-sm-3">First Name:</dt>
+        <dd class="col-sm-9">@Model.TeacherFName</dd>
+
+        <dt class="col-sm-3">Last Name:</dt>
+        <dd class="col-sm-9">@Model.TeacherLName</dd>
+
+        <dt class="col-sm-3">Employee Number:</dt>
+        <dd class="col-sm-9">@Model.EmployeeNumber</dd>
+
+        <dt class="col-sm-3">Hire Date:</dt>
+        <dd class="col-sm-9">@Model.HireDate.ToString("yyyy-MM-dd")</dd>
+
+        <dt class="col-sm-3">Salary:</dt>
+        <dd class="col-sm-9">@Model.Salary.ToString("C")</dd>
+
+        <dt class="col-sm-3">Work Phone:</dt>
+        <dd class="col-sm-9">
+            @(string.IsNullOrEmpty(Model.TeacherWorkPhone) ? "Not available" : Model.TeacherWorkPhone)
+        </dd>
+    </dl>
+</div>
+
+<a href="@Url.Action("List", "TeacherPage")" class="btn btn-secondary">Back to List</a>

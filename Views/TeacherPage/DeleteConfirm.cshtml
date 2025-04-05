@@ -1,0 +1,38 @@
+﻿@model HTTP_5125_Cumulative2.Models.Teacher
+
+@{
+    ViewData["Title"] = "Delete Teacher";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<div class="alert alert-warning">
+    <strong>Warning!</strong> Are you sure you want to delete the teacher <b>@Model.TeacherFName @Model.TeacherLName</b>?
+</div>
+
+<div class="teacher-details">
+    <dl class="row">
+        <dt class="col-sm-3">First Name:</dt>
+        <dd class="col-sm-9">@Model.TeacherFName</dd>
+
+        <dt class="col-sm-3">Last Name:</dt>
+        <dd class="col-sm-9">@Model.TeacherLName</dd>
+
+        <dt class="col-sm-3">Employee Number:</dt>
+        <dd class="col-sm-9">@Model.EmployeeNumber</dd>
+
+        <dt class="col-sm-3">Hire Date:</dt>
+        <dd class="col-sm-9">@Model.HireDate.ToString("yyyy-MM-dd")</dd>
+
+        <dt class="col-sm-3">Salary:</dt>
+        <dd class="col-sm-9">@Model.Salary.ToString("C")</dd>
+
+        <dt class="col-sm-3">Work Phone:</dt>
+        <dd class="col-sm-9">@Model.TeacherWorkPhone</dd>
+    </dl>
+</div>
+
+<form method="post" asp-action="Delete" asp-route-id="@Model.TeacherId" class="form-inline">
+    <button type="submit" class="btn btn-danger">Delete</button>
+    <a href="@Url.Action("List")" class="btn btn-secondary ml-2">Cancel</a>
+</form>
