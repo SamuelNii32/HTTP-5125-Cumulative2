@@ -311,5 +311,97 @@ namespace HTTP_5125_Cumulative2.Controllers
         }
 
 
+        /// <summary>
+        /// Updates a Teacher in the database. Data is Teacher object, request query contains ID
+        /// </summary>
+        /// <param name="TeacherData">Teacher Object</param>
+        /// <param name="TeacherId">The Teacher ID primary key</param>
+        /// <example>
+        /// PUT: api/Teacher/UpdateTeacher/4
+        /// Headers: Content-Type: application/json
+        /// Request Body:
+        /// {
+        ///     "TeacherFName": "Lauren",
+        ///     "TeacherLName": "Smith",
+        ///     "EmployeeNumber": "T385",
+        ///     "HireDate": "2014-06-22T00:00:00",
+        ///     "Salary": 74.2,
+        ///     "TeacherWorkPhone": "Null"
+        /// } -> 
+        /// {
+        ///     "TeacherId": 4,
+        ///     "TeacherFName": "Lauren",
+        ///     "TeacherLName": "Owusu",
+        ///     "EmployeeNumber": "T385",
+        ///     "HireDate": "2014-06-22T00:00:00",
+        ///     "Salary": 74.2,
+        ///     "TeacherWorkPhone": "123-456-7890"
+        /// }
+        /// </example>
+        /// <returns>
+        /// The updated Teacher object
+        /// </returns>
+        [HttpPut("UpdateTeacher/{TeacherId}")]
+        public IActionResult UpdateTeacher(int TeacherId, [FromBody] Teacher TeacherData)
+        {
+            // Server-side validation
+            if (string.IsNullOrWhiteSpace(TeacherData.TeacherFName))
+            {
+                return BadRequest("Teacher first name cannot be empty.");
+            }
+            if (TeacherData.HireDate > DateTime.Now)
+            {
+                return BadRequest("Hire date cannot be in the future.");
+            }
+            if (TeacherData.Salary < 0)
+            {
+                return BadRequest("Salary cannot be less than 0.");
+            }
+
+            // Connect to database
+            using (MySqlConnection Connection = _context.AccessDatabase())
+            {
+                Connection.Open();
+                MySqlCommand Command = Connection.CreateCommand();
+
+                // Check if the teacher exists
+                Command.CommandText = "SELECT COUNT(*) FROM teachers WHERE TeacherId = @TeacherId";
+                Command.Parameters.AddWithValue("@TeacherId", TeacherId);
+
+                var count = Convert.ToInt32(Command.ExecuteScalar());
+                if (count == 0)
+                {
+                    return NotFound("Teacher not found.");
+                }
+
+                // Update teacher details
+                Command.CommandText = @"
+            UPDATE teachers 
+            SET TeacherFName = @TeacherFName, 
+                TeacherLName = @TeacherLName, 
+                EmployeeNumber = @EmployeeNumber, 
+                HireDate = @HireDate, 
+                Salary = @Salary, 
+                TeacherWorkPhone = @TeacherWorkPhone 
+            WHERE TeacherId = @TeacherId";
+
+                Command.Parameters.AddWithValue("@TeacherFName", TeacherData.TeacherFName);
+                Command.Parameters.AddWithValue("@TeacherLName", TeacherData.TeacherLName);
+                Command.Parameters.AddWithValue("@EmployeeNumber", TeacherData.EmployeeNumber);
+                Command.Parameters.AddWithValue("@HireDate", TeacherData.HireDate);
+                Command.Parameters.AddWithValue("@Salary", TeacherData.Salary);
+                Command.Parameters.AddWithValue("@TeacherWorkPhone", TeacherData.TeacherWorkPhone);
+
+                Command.ExecuteNonQuery();
+            }
+
+            // Return the updated teacher object
+            return Ok(TeacherData);
+        }
+
+
+
     }
 }
+
+

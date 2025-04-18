@@ -84,5 +84,32 @@ namespace HTTP_5125_Cumulative2.Controllers
             }
             return BadRequest("An error occurred while deleting the teacher.");
         }
+
+
+        // GET : TeacherPage/Edit/{id}
+        [HttpGet]
+        public IActionResult Edit(int id)
+        {
+            Teacher selectedTeacher = _api.FindTeacher(id);
+            return View(selectedTeacher);
+        }
+
+        // POST: TeacherPage/Update/{id}
+        [HttpPost]
+        public IActionResult Update(int id, string TeacherFName, string TeacherLName, string EmployeeNumber, DateTime HireDate, decimal Salary, string TeacherWorkPhone)
+        {
+            Teacher updatedTeacher = new Teacher();
+            updatedTeacher.TeacherFName = TeacherFName;
+            updatedTeacher.TeacherLName = TeacherLName;
+            updatedTeacher.EmployeeNumber = EmployeeNumber;
+            updatedTeacher.HireDate = HireDate;
+            updatedTeacher.Salary = Salary;
+            updatedTeacher.TeacherWorkPhone = TeacherWorkPhone;
+
+            _api.UpdateTeacher(id, updatedTeacher);
+            return RedirectToAction("Show", new { id = id });
+        }
+
+
     }
 }

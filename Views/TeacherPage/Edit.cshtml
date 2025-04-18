@@ -1,0 +1,69 @@
+﻿@model HTTP_5125_Cumulative2.Models.Teacher
+
+@{
+    ViewData["Title"] = "Edit Teacher";
+}
+
+<h2>Edit Teacher</h2>
+
+<form asp-action="Update" asp-controller="TeacherPage" method="post" onsubmit="return validateForm()">
+    <input type="hidden" name="id" value="@Model.TeacherId" />
+
+    <div>
+        <label>First Name:</label>
+        <input type="text" name="TeacherFName" value="@Model.TeacherFName" required />
+    </div>
+
+    <div>
+        <label>Last Name:</label>
+        <input type="text" name="TeacherLName" value="@Model.TeacherLName" />
+    </div>
+
+    <div>
+        <label>Employee Number:</label>
+        <input type="text" name="EmployeeNumber" value="@Model.EmployeeNumber" required />
+    </div>
+
+    <div>
+        <label>Hire Date:</label>
+        <input type="date" name="HireDate" value="@Model.HireDate.ToString("yyyy-MM-dd")" required />
+    </div>
+
+    <div>
+        <label>Salary:</label>
+        <input type="number" name="Salary" step="0.01" value="@Model.Salary" required />
+    </div>
+
+    <div>
+        <label>Work Phone:</label>
+        <input type="text" name="TeacherWorkPhone" value="@Model.TeacherWorkPhone" />
+    </div>
+
+    <button type="submit">Update Teacher</button>
+</form>
+
+<script>
+    function validateForm() {
+        const fName = document.querySelector('[name="TeacherFName"]').value.trim();
+        const hireDate = new Date(document.querySelector('[name="HireDate"]').value);
+        const salary = parseFloat(document.querySelector('[name="Salary"]').value);
+        const today = new Date();
+
+        if (fName === "") {
+            alert("First name cannot be empty.");
+            return false;
+        }
+
+        if (hireDate > today) {
+            alert("Hire date cannot be in the future.");
+            return false;
+        }
+
+        if (salary < 0) {
+            alert("Salary cannot be negative.");
+            return false;
+        }
+
+        return true;
+    }
+</script>
